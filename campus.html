@@ -2,42 +2,91 @@
 <html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#101827"><title>Carte du campus · TD TP Planner</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
-:root{color-scheme:dark}*{box-sizing:border-box}body{margin:0;background:#0b1422;color:#f5f7fb;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}header{height:62px;display:flex;align-items:center;gap:12px;padding:0 14px;background:#111e30;border-bottom:1px solid #293b52}header a{color:#9cddff;text-decoration:none;font-size:22px}header strong{font-size:17px}.sub{font-size:11px;color:#a7b7ca;margin-top:2px}.mapwrap{position:relative;height:52vh;min-height:330px}#map{height:100%;width:100%;background:#18283b}.mapbtn{position:absolute;z-index:500;right:14px;top:14px;border:0;border-radius:14px;background:#fff;color:#172438;padding:12px 14px;font-weight:750;box-shadow:0 3px 14px #0005}.panel{padding:14px;max-width:760px;margin:auto}.search{width:100%;padding:13px 15px;border:1px solid #354b66;border-radius:13px;background:#17263a;color:white;font-size:15px;outline:none}.hint{font-size:12px;color:#a9b9cb;line-height:1.5;margin:10px 2px 14px}.groups{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.place{display:flex;align-items:center;justify-content:space-between;gap:8px;text-align:left;border:1px solid #2d4059;background:#15243a;color:#fff;border-radius:12px;padding:12px;font-size:13px}.place small{display:block;color:#9fb0c5;font-size:10px;margin-top:4px}.pill{font-size:10px;color:#ffd27a}.place:active{transform:scale(.98)}.actions{display:flex;gap:8px;margin-top:12px}.actions button{flex:1;border:0;border-radius:12px;padding:12px;background:#176d83;color:white;font-weight:750}.actions .secondary{background:#293b52}.status{font-size:12px;color:#a9b9cb;margin:12px 2px;min-height:18px}.leaflet-control-attribution{font-size:9px!important}
-@media(min-width:800px){.mapwrap{height:56vh}.panel{padding-top:18px}.groups{grid-template-columns:repeat(3,minmax(0,1fr))}}
+:root{color-scheme:dark}*{box-sizing:border-box}body{margin:0;background:#0b1422;color:#f5f7fb;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}header{height:62px;display:flex;align-items:center;gap:12px;padding:0 14px;background:#111e30;border-bottom:1px solid #293b52}header a{color:#9cddff;text-decoration:none;font-size:22px}header strong{font-size:17px}.sub{font-size:11px;color:#a7b7ca;margin-top:2px}.mapwrap{position:relative;height:48vh;min-height:310px}#map{height:100%;width:100%;background:#18283b}.mapbtn{position:absolute;z-index:500;right:14px;top:14px;border:0;border-radius:14px;background:#fff;color:#172438;padding:12px 14px;font-weight:750;box-shadow:0 3px 14px #0005}.panel{padding:14px;max-width:820px;margin:auto}.search{width:100%;padding:13px 15px;border:1px solid #354b66;border-radius:13px;background:#17263a;color:white;font-size:15px;outline:none}.hint{font-size:12px;color:#a9b9cb;line-height:1.5;margin:10px 2px 14px}.groups{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.place{display:flex;align-items:center;justify-content:space-between;gap:8px;text-align:left;border:1px solid #2d4059;background:#15243a;color:#fff;border-radius:12px;padding:11px;font-size:13px}.place small{display:block;color:#9fb0c5;font-size:10px;margin-top:4px}.pill{font-size:10px;color:#ffd27a;white-space:nowrap}.place:active{transform:scale(.98)}.actions{display:flex;gap:8px;margin-top:12px}.actions button{flex:1;border:0;border-radius:12px;padding:12px;background:#176d83;color:white;font-weight:750}.actions .secondary{background:#293b52}.status{font-size:12px;color:#a9b9cb;margin:12px 2px;min-height:18px}.leaflet-control-attribution{font-size:9px!important}h3{font-size:15px;margin:18px 0 9px}
+@media(min-width:800px){.mapwrap{height:55vh}.panel{padding-top:18px}.groups{grid-template-columns:repeat(3,minmax(0,1fr))}}
 </style></head><body>
 <header><a href="./" aria-label="Retour">‹</a><div><strong>Carte du campus</strong><div class="sub">Université de Béjaïa · Targa Ouzemmour</div></div></header>
 <div class="mapwrap"><div id="map"></div><button class="mapbtn" id="locate">◎ Ma position</button></div>
-<section class="panel"><input id="search" class="search" placeholder="Rechercher un amphi ou un bloc…" autocomplete="off">
-<div class="hint">Carte satellite et géolocalisation. Les noms ci-dessous sont répertoriés, mais les positions GPS individuelles des amphithéâtres ne sont pas encore confirmées. Je préfère ne pas afficher de faux marqueurs ni calculer une fausse distance.</div>
-<div class="actions"><button id="directions">Itinéraire vers le campus</button><button class="secondary" id="center">Recentrer la carte</button></div><div class="status" id="status">Autorisez la localisation pour afficher votre position sur la carte.</div>
-<h3 style="font-size:15px;margin:18px 0 10px">Amphithéâtres</h3><div class="groups" id="amphis"></div>
-<h3 style="font-size:15px;margin:18px 0 10px">Blocs visibles sur vos captures</h3><div class="groups" id="blocks"></div>
+<section class="panel"><input id="search" class="search" placeholder="Rechercher un amphi, bloc ou service…" autocomplete="off">
+<div class="hint">Les marqueurs ci-dessous utilisent les coordonnées que tu m'as données. La distance affichée est une distance à vol d'oiseau, pas la distance exacte du chemin piéton.</div>
+<div class="actions"><button id="directions">Itinéraire vers le lieu sélectionné</button><button class="secondary" id="center">Voir tout le campus</button></div><div class="status" id="status">Choisis un lieu dans les listes ou active ta position GPS.</div>
+<h3>Amphithéâtres (29)</h3><div class="groups" id="amphis"></div>
+<h3>Blocs et départements</h3><div class="groups" id="blocks"></div>
+<h3>Services et autres lieux</h3><div class="groups" id="services"></div>
 </section>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-const CAMPUS=[36.75217,5.03768]; // repère général approximatif du campus
-const map=L.map('map',{zoomControl:true}).setView(CAMPUS,17);
+const map=L.map('map').setView([36.7515,5.0362],17);
 L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,attribution:'Tiles © Esri — Sources: Esri, Maxar, Earthstar Geographics'}).addTo(map);
-const campusPin=L.marker(CAMPUS).addTo(map).bindPopup('<b>Université de Béjaïa</b><br>Repère général du campus');
-let userMarker=null,userCircle=null,userPosition=null,watchId=null;
+const places=[
+{name:'Bloc 02',group:'blocks',lat:36.7513767,lon:5.0340047},
+{name:'Bloc 03',group:'blocks',lat:36.7505657,lon:5.0347853},
+{name:'Bloc 05',group:'blocks',lat:36.7508333,lon:5.0376831},
+{name:'Bloc 06',group:'blocks',lat:36.7500647,lon:5.0359711},
+{name:'Bloc 07',group:'blocks',lat:36.7503328,lon:5.0341965},
+{name:'Bloc 08',group:'blocks',lat:36.7516327,lon:5.0334884},
+{name:'Bloc 09',group:'blocks',lat:36.7504338,lon:5.0357271},
+{name:'Bloc 10',group:'blocks',lat:36.7511844,lon:5.0347477},
+{name:'Bloc 11',group:'blocks',lat:36.7521520,lon:5.0341576},
+{name:'Bloc 12',group:'blocks',lat:null,lon:null},
+{name:'Bloc Hydraulique',group:'blocks',lat:36.7508088,lon:5.0379496},
+{name:'Bloc Haute Tension',group:'blocks',lat:36.7507137,lon:5.0339602},
+{name:'Bloc Architecture',group:'blocks',lat:36.7529759,lon:5.0351806},
+{name:'Centre de génie électrique',group:'blocks',lat:36.7528389,lon:5.0356064},
+{name:'Amphi 1',group:'amphis',lat:36.7515027,lon:5.0350012},
+{name:'Amphi 2',group:'amphis',lat:36.7512859,lon:5.0352258},
+{name:'Amphi 3',group:'amphis',lat:null,lon:null},
+{name:'Amphi 4',group:'amphis',lat:36.7512564,lon:5.0360392},
+{name:'Amphi 5',group:'amphis',lat:36.7518984,lon:5.0355437},
+{name:'Amphi 6',group:'amphis',lat:36.7518106,lon:5.0352902},
+{name:'Amphi 7',group:'amphis',lat:36.7520395,lon:5.0350877},
+{name:'Amphi 8',group:'amphis',lat:36.7522219,lon:5.0352476},
+{name:'Amphi 9',group:'amphis',lat:null,lon:null},
+{name:'Amphi 10',group:'amphis',lat:36.7505082,lon:5.0375932},
+{name:'Amphi 11',group:'amphis',lat:36.7506109,lon:5.0374105},
+{name:'Amphi 12',group:'amphis',lat:36.7507239,lon:5.0373049},
+{name:'Amphi 13',group:'amphis',lat:36.7513098,lon:5.0387224},
+{name:'Amphi 14',group:'amphis',lat:36.7512072,lon:5.0388565},
+{name:'Amphi 15',group:'amphis',lat:36.7510482,lon:5.0388559},
+{name:'Amphi 16',group:'amphis',lat:36.7499041,lon:5.0357167},
+{name:'Amphi 17',group:'amphis',lat:36.7497945,lon:5.0355551},
+{name:'Amphi 18',group:'amphis',lat:36.7496899,lon:5.0352466},
+{name:'Amphi 19',group:'amphis',lat:36.7497246,lon:5.0349563},
+{name:'Amphi 20',group:'amphis',lat:36.7522372,lon:5.0335954},
+{name:'Amphi 21',group:'amphis',lat:36.7524083,lon:5.0337429},
+{name:'Amphi 22',group:'amphis',lat:36.7506646,lon:5.0365250},
+{name:'Amphi 23',group:'amphis',lat:36.7508164,lon:5.0367731},
+{name:'Amphi 24',group:'amphis',lat:36.7508354,lon:5.0364006},
+{name:'Amphi 25',group:'amphis',lat:36.7509695,lon:5.0366149},
+{name:'Amphi 26',group:'amphis',lat:36.7499992,lon:5.0364395},
+{name:'Amphi 27',group:'amphis',lat:36.7526202,lon:5.0343028},
+{name:'Amphi 28',group:'amphis',lat:36.7522122,lon:5.0330019},
+{name:'Amphi 29',group:'amphis',lat:36.7525184,lon:5.0328263},
+{name:'Centre d’impression',group:'services',lat:36.7518600,lon:5.0367879},
+{name:'Laboratoire informatique',group:'services',lat:36.7524174,lon:5.0366843},
+{name:'Laboratoire chimie',group:'services',lat:36.7505697,lon:5.0383328},
+{name:'Centre de calcul',group:'services',lat:36.7524607,lon:5.0349526},
+{name:'CNAS',group:'services',lat:36.7517101,lon:5.0381779},
+{name:'Bibliothèque SNV',group:'services',lat:36.7521063,lon:5.0382215},
+{name:'Bibliothèque centrale',group:'services',lat:36.7513757,lon:5.0370531},
+{name:'Foyer',group:'services',lat:36.7520494,lon:5.0376740},
+{name:'Bibliothèque ST',group:'services',lat:36.7519957,lon:5.0334827},
+{name:'Parking',group:'services',lat:36.7500709,lon:5.0397098},
+{name:'Université de Béjaïa',group:'services',lat:36.7500440,lon:5.0406667}
+];
+const groupLabels={amphis:'Amphithéâtre',blocks:'Bâtiment',services:'Service'};
+const markerByName={};let selected=null,userPosition=null,userMarker=null,userCircle=null;
 const status=document.getElementById('status');
 function setStatus(t){status.textContent=t}
-document.getElementById('locate').onclick=()=>{
- if(!('geolocation'in navigator)){setStatus('La géolocalisation n’est pas disponible dans ce navigateur.');return}
- setStatus('Recherche de votre position…');
- navigator.geolocation.getCurrentPosition(pos=>{
-  userPosition=[pos.coords.latitude,pos.coords.longitude];const accuracy=pos.coords.accuracy;
-  if(userMarker)map.removeLayer(userMarker);if(userCircle)map.removeLayer(userCircle);
-  userMarker=L.circleMarker(userPosition,{radius:9,color:'#fff',weight:3,fillColor:'#1685ff',fillOpacity:1}).addTo(map).bindPopup('Vous êtes ici');
-  userCircle=L.circle(userPosition,{radius:accuracy,color:'#1685ff',weight:1,fillOpacity:.08}).addTo(map);
-  map.setView(userPosition,18);render(blocks,document.getElementById('blocks'));setStatus('Position trouvée · précision estimée ±'+Math.round(accuracy)+' m. Distance Bloc 02 : '+distanceMeters(userPosition,[36.7513767,5.0340047])+' m à vol d’oiseau. La précision peut être réduite à l’intérieur des bâtiments.');
- },err=>setStatus(err.code===1?'Autorisation refusée : activez la localisation pour ce site dans les réglages de l’iPhone.':'Position indisponible. Vérifiez le GPS et réessayez.'),{enableHighAccuracy:true,timeout:15000,maximumAge:5000});
-};
-document.getElementById('center').onclick=()=>map.setView(CAMPUS,17);
-document.getElementById('directions').onclick=()=>window.open('https://www.google.com/maps/dir/?api=1&destination='+CAMPUS.join(',')+'&travelmode=walking','_blank');
-const amphitheatres=Array.from({length:29},(_,i)=>({name:'Amphi '+(i+1),n:i+1,seen:[5,25,26,27].includes(i+1)}));
-const blocks=[{name:'Bloc 02',coords:[36.7513767,5.0340047]},{name:'Bloc 03'},{name:'Bloc 07'},{name:'Bloc 10'},{name:'Bloc 12'},{name:'Bloc Hydraulique'}];\nconst blockMarkers={};\nblockMarkers['Bloc 02']=L.marker([36.7513767,5.0340047]).addTo(map).bindPopup('<b>Bloc 02</b><br>Coordonnées confirmées par toi');\nfunction distanceMeters(a,b){const R=6371000,rad=x=>x*Math.PI/180,dLat=rad(b[0]-a[0]),dLon=rad(b[1]-a[1]),x=Math.sin(dLat/2)**2+Math.cos(rad(a[0]))*Math.cos(rad(b[0]))*Math.sin(dLon/2)**2;return Math.round(2*R*Math.asin(Math.sqrt(x)));}
-function render(list,root){root.innerHTML='';list.forEach(p=>{const b=document.createElement('button');b.className='place';const left=document.createElement('span');left.textContent=p.name;const small=document.createElement('small');small.textContent=p.coords?'Coordonnées confirmées':(p.seen?'Identifié sur vos captures · GPS à confirmer':'Position à confirmer');left.append(small);const tag=document.createElement('span');tag.className='pill';tag.textContent=p.coords?(userPosition?distanceMeters(userPosition,p.coords)+' m':'GPS OK'):(p.seen?'Vu':'À placer');b.append(left,tag);b.onclick=()=>{if(p.coords){map.setView(p.coords,19);blockMarkers[p.name].openPopup();setStatus(userPosition?'Bloc 02 · '+distanceMeters(userPosition,p.coords)+' m à vol d’oiseau.':'Bloc 02 sélectionné · active Ma position pour calculer la distance.');}else setStatus(p.name+' : son point GPS exact reste à confirmer.');};root.append(b)})}
-render(amphitheatres,document.getElementById('amphis'));render(blocks,document.getElementById('blocks'));
-document.getElementById('search').addEventListener('input',e=>{const q=e.target.value.trim().toLowerCase();render(amphitheatres.filter(p=>p.name.toLowerCase().includes(q)),document.getElementById('amphis'));render(blocks.filter(p=>p.name.toLowerCase().includes(q)),document.getElementById('blocks'))});
+function coords(p){return p.lat==null?null:[p.lat,p.lon]}
+function distance(a,b){const R=6371000,r=x=>x*Math.PI/180,d1=r(b[0]-a[0]),d2=r(b[1]-a[1]),h=Math.sin(d1/2)**2+Math.cos(r(a[0]))*Math.cos(r(b[0]))*Math.sin(d2/2)**2;return Math.round(2*R*Math.asin(Math.sqrt(h)))}
+function choose(p){selected=p;const ll=coords(p);if(!ll){setStatus(p.name+' : coordonnées non reçues pour le moment.');return}map.setView(ll,19);markerByName[p.name].openPopup();setStatus(p.name+(userPosition?' · '+distance(userPosition,ll)+' m à vol d’oiseau':' · position sélectionnée. Active Ma position pour calculer la distance.'))}
+places.forEach(p=>{const ll=coords(p);if(ll){const marker=L.marker(ll).addTo(map).bindPopup('<b>'+p.name+'</b><br>'+ll[0].toFixed(7)+', '+ll[1].toFixed(7));marker.on('click',()=>{selected=p;setStatus(p.name+(userPosition?' · '+distance(userPosition,ll)+' m à vol d’oiseau':''))});markerByName[p.name]=marker}});
+function render(group,query=''){const root=document.getElementById(group);root.innerHTML='';places.filter(p=>p.group===group&&p.name.toLowerCase().includes(query)).forEach(p=>{const b=document.createElement('button');b.className='place';const left=document.createElement('span');left.textContent=p.name;const small=document.createElement('small');small.textContent=coords(p)?'Coordonnées GPS ajoutées':'Coordonnées à fournir';left.append(small);const tag=document.createElement('span');tag.className='pill';tag.textContent=coords(p)?(userPosition?distance(userPosition,coords(p))+' m':'GPS OK'):'À compléter';b.append(left,tag);b.onclick=()=>choose(p);root.append(b)})}
+function renderAll(q=''){['amphis','blocks','services'].forEach(g=>render(g,q))}
+renderAll();
+document.getElementById('search').addEventListener('input',e=>renderAll(e.target.value.trim().toLowerCase()));
+document.getElementById('locate').onclick=()=>{if(!navigator.geolocation){setStatus('Géolocalisation indisponible.');return}setStatus('Recherche de ta position…');navigator.geolocation.getCurrentPosition(pos=>{userPosition=[pos.coords.latitude,pos.coords.longitude];if(userMarker)map.removeLayer(userMarker);if(userCircle)map.removeLayer(userCircle);userMarker=L.circleMarker(userPosition,{radius:9,color:'#fff',weight:3,fillColor:'#1685ff',fillOpacity:1}).addTo(map).bindPopup('Tu es ici');userCircle=L.circle(userPosition,{radius:pos.coords.accuracy,color:'#1685ff',weight:1,fillOpacity:.08}).addTo(map);map.setView(userPosition,18);renderAll(document.getElementById('search').value.trim().toLowerCase());setStatus('Position GPS trouvée · précision estimée ±'+Math.round(pos.coords.accuracy)+' m. Les distances sont à vol d’oiseau.');},err=>setStatus(err.code===1?'Autorisation refusée : autorise la localisation pour ce site dans les réglages iPhone.':'Position introuvable. Vérifie le GPS et réessaie.'),{enableHighAccuracy:true,timeout:15000,maximumAge:5000})};
+document.getElementById('center').onclick=()=>{const pts=places.filter(p=>coords(p)).map(p=>coords(p));map.fitBounds(pts,{padding:[24,24]})};
+document.getElementById('directions').onclick=()=>{if(!selected||!coords(selected)){setStatus('Sélectionne d’abord un lieu qui possède des coordonnées.');return}const dest=coords(selected).join(',');const origin=userPosition?'&origin='+userPosition.join(','):'';window.open('https://www.google.com/maps/dir/?api=1&destination='+encodeURIComponent(dest)+origin+'&travelmode=walking','_blank')};
 </script></body></html>
