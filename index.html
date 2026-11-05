@@ -15,10 +15,11 @@ button,select,input{font:inherit}button{border:0;border-radius:12px;padding:11px
 .lesson{padding:10px;border-radius:10px;background:#1c2b40;margin-top:7px;border-left:3px solid #8ed8ff}.lesson.tp{border-left-color:var(--gold)}.lesson.next{background:#14583f;border-left-color:#65e6a3;outline:1px solid #65e6a3}.lesson .top{display:flex;justify-content:space-between;gap:8px;font-size:12px;font-weight:800}.lesson .name{font-size:14px;font-weight:700;margin-top:4px}.lesson .room{font-size:11px;color:var(--muted);margin-top:3px}.empty{font-size:12px;color:var(--muted);padding:4px}
 dialog{width:min(94vw,560px);max-height:88vh;overflow:auto;border:1px solid #2a3a52;border-radius:18px;background:#111d2e;color:white;padding:18px}dialog::backdrop{background:#000a}.field{display:grid;gap:6px;margin:12px 0}label{font-size:12px;color:#c5d1e0}input,select{width:100%;padding:10px;border-radius:9px;border:1px solid #40516a;background:#0c1625;color:white}.editor-day{border-top:1px solid #2a3a52;padding-top:12px;margin-top:12px}.lesson-edit{background:#18283d;padding:10px;border-radius:10px;margin:8px 0}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.primary{background:#176b50}.secondary{background:#293a51}.danger{background:#7c3038}.note{font-size:11px;color:var(--muted);line-height:1.45;margin-top:16px}
 
-.tabs{display:flex;gap:8px;margin:0 0 14px}.tabs .tab{flex:1;background:#1c2b40}.tabs .tab.active{background:#176b50;outline:1px solid #65e6a3}#gamesView h2{margin:12px 0}.game-menu{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.game-choice{flex:1;min-width:90px}.game-panel{background:var(--panel);border:1px solid #2a3a52;border-radius:16px;padding:14px;text-align:center}#gameTitle{font-weight:800;margin-bottom:10px}#gameCanvas{display:block;width:min(100%,320px);height:auto;margin:0 auto;background:#07111f;border:1px solid #40516a;border-radius:10px;touch-action:none}.game-controls{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px auto;max-width:320px}.game-controls button{font-size:20px;padding:12px}
+.tabs{display:flex;gap:8px;margin:0 0 14px;flex-wrap:wrap}.tabs .tab{font-size:12px;padding:10px 9px;min-width:0}
+#adventureView{color:#f5f7fb}.adventure-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:10px 0}.adventure-head h2{margin:0;font-size:22px}.adventure-head p{margin:5px 0;color:var(--muted);font-size:12px}.quest-pill{background:#263a56;border:1px solid #52749b;border-radius:999px;padding:9px 12px;font-weight:800;white-space:nowrap}.adventure-frame{position:relative;background:#10283a;border:1px solid #38536a;border-radius:18px;overflow:hidden;box-shadow:0 12px 35px #0006}#adventureCanvas{height:min(62vh,520px);min-height:340px;width:100%;touch-action:none}#adventureCanvas canvas{display:block;width:100%;height:100%}.adventure-hud{position:absolute;left:10px;right:10px;top:10px;display:flex;justify-content:space-between;align-items:center;pointer-events:none}.adventure-hud span,.adventure-hud button{pointer-events:auto;background:#081827cc;border:1px solid #ffffff30;border-radius:12px;padding:8px 11px;font-size:12px}.adventure-controls{display:flex;align-items:center;gap:14px;margin-top:12px;background:#152238;border-radius:16px;padding:12px}.dpad{display:grid;gap:5px;flex:0 0 160px}.dpad>button{width:48px;justify-self:center}.dpad div{display:flex;justify-content:center;gap:5px}.dpad button{padding:12px 14px;touch-action:none;user-select:none}.adventure-help{font-size:11px;line-height:1.5;color:var(--muted)}@media(max-width:390px){.adventure-controls{align-items:flex-start;flex-direction:column}.dpad{align-self:center}}.tabs .tab{flex:1;background:#1c2b40}.tabs .tab.active{background:#176b50;outline:1px solid #65e6a3}#gamesView h2{margin:12px 0}.game-menu{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.game-choice{flex:1;min-width:90px}.game-panel{background:var(--panel);border:1px solid #2a3a52;border-radius:16px;padding:14px;text-align:center}#gameTitle{font-weight:800;margin-bottom:10px}#gameCanvas{display:block;width:min(100%,320px);height:auto;margin:0 auto;background:#07111f;border:1px solid #40516a;border-radius:10px;touch-action:none}.game-controls{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px auto;max-width:320px}.game-controls button{font-size:20px;padding:12px}
 </style></head><body><main>
 <header><div><h1>TD / TP Planner</h1><div class="sub">Groupe 3 · L3 Électromécanique</div></div><button class="gear" id="settingsBtn">⚙️</button></header>
-<nav class="tabs"><button class="tab active" id="scheduleTab">Emploi du temps</button><button class="tab" id="gamesTab">Mini-jeux 🎮</button></nav>
+<nav class="tabs"><button class="tab active" id="scheduleTab">Emploi du temps</button><button class="tab" id="gamesTab">Mini-jeux 🎮</button><button class="tab" id="adventureTab">3D Adventure 🌴</button></nav>
 <div id="scheduleView">
 <section class="timer"><div class="kicker" id="timerLabel">PROCHAIN COURS</div><div id="nextName">Chargement…</div><div id="countdown">--:--:--</div><div id="nextMeta"></div></section>
 <div class="mode"><div><b id="modeTitle">TP : automatique</b><br><small id="modeDetail">Alternance une semaine sur deux</small></div><button id="modeBtn">Paramètres TP</button></div>
@@ -40,6 +41,11 @@ dialog{width:min(94vw,560px);max-height:88vh;overflow:auto;border:1px solid #2a3
 <div class="actions"><button class="primary" id="startGame">Démarrer / Recommencer</button><button class="secondary" id="stopGame">Pause</button></div>
 <div id="gameMessage" class="note">Appuie sur Démarrer pour jouer.</div>
 </div>
+</section>
+<section id="adventureView" hidden>
+<div class="adventure-head"><div><h2>Crystal Island</h2><p>Explore the island, collect 5 crystals and unlock the ancient portal.</p></div><div class="quest-pill" id="questCount">💎 0 / 5</div></div>
+<div class="adventure-frame"><div id="adventureCanvas" aria-label="3D adventure game"></div><div class="adventure-hud"><span id="adventureStatus">Find the crystals!</span><button id="adventureReset">↻ Restart</button></div></div>
+<div class="adventure-controls"><div class="dpad"><button data-move="forward">▲</button><div><button data-move="left">◀</button><button data-move="back">▼</button><button data-move="right">▶</button></div></div><div class="adventure-help">Move with the arrows or WASD. On iPhone, use the touch pad. Walk close to glowing crystals to collect them.</div></div>
 </section>
 <dialog id="settings"><h2>Paramètres du planning</h2>
 <div class="field"><label for="tpMode">Gestion des TP</label><select id="tpMode"><option value="auto">Automatique (alternance)</option><option value="on">Forcer les TP ON</option><option value="off">Forcer les TP OFF</option></select></div>
@@ -71,8 +77,10 @@ document.getElementById("settingsBtn").onclick=openSettings;document.getElementB
 document.getElementById("save").onclick=()=>{state.tpMode=document.getElementById("tpMode").value;state.anchor=document.getElementById("anchor").value||"2026-11-08";document.querySelectorAll("#editors [data-k]").forEach(el=>{state.days[+el.dataset.di].items[+el.dataset.ii][el.dataset.k]=el.value.trim()});save();document.getElementById("settings").close();render()};
 document.getElementById("reset").onclick=()=>{if(confirm("Réinitialiser le planning ?")){state={days:clone(defaults),tpMode:"auto",anchor:"2026-11-08"};save();openSettings();render()}};
 
-document.getElementById("scheduleTab").onclick=()=>{document.getElementById("scheduleView").hidden=false;document.getElementById("gamesView").hidden=true;document.getElementById("scheduleTab").classList.add("active");document.getElementById("gamesTab").classList.remove("active")};
-document.getElementById("gamesTab").onclick=()=>{document.getElementById("scheduleView").hidden=true;document.getElementById("gamesView").hidden=false;document.getElementById("gamesTab").classList.add("active");document.getElementById("scheduleTab").classList.remove("active")};
+function showTab(which){["schedule","games","adventure"].forEach(k=>{document.getElementById(k+"View").hidden=k!==which;document.getElementById(k+"Tab").classList.toggle("active",k===which)});if(which==="adventure"&&window.startCrystalIsland)window.startCrystalIsland()}
+document.getElementById("scheduleTab").onclick=()=>showTab("schedule");
+document.getElementById("gamesTab").onclick=()=>showTab("games");
+document.getElementById("adventureTab").onclick=()=>showTab("adventure");
 (()=>{
 const canvas=document.getElementById("gameCanvas"),ctx=canvas.getContext("2d"),msg=document.getElementById("gameMessage");
 let game="snake",timer=null,running=false,snake=[],dir={x:1,y:0},food={},bricks=[],ball={},paddle=140,carX=145,obstacles=[],score=0,tick=0;
@@ -103,4 +111,44 @@ document.addEventListener("keydown",e=>{if(["ArrowLeft","ArrowRight","ArrowUp","
 document.getElementById("leftBtn").onclick=()=>steer("ArrowLeft");document.getElementById("rightBtn").onclick=()=>steer("ArrowRight");document.getElementById("upBtn").onclick=()=>steer("ArrowUp");document.getElementById("downBtn").onclick=()=>steer("ArrowDown");document.getElementById("startGame").onclick=start;document.getElementById("stopGame").onclick=()=>{stop();msg.textContent="Pause · Score : "+score};choose("snake");
 })();
 if("serviceWorker"in navigator)addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));render();setInterval(render,1000);
+</script><script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js"></script>
+<script>
+(()=>{let renderer,scene,camera,player,clock,anim,started=false,crystals=[],collected=0,keys={},move={forward:false,back:false,left:false,right:false},world;
+const host=document.getElementById("adventureCanvas"),status=document.getElementById("adventureStatus"),counter=document.getElementById("questCount");
+function mat(color,roughness=0.85){return new THREE.MeshStandardMaterial({color,roughness})}
+function box(parent,x,y,z,sx,sy,sz,material){let m=new THREE.Mesh(new THREE.BoxGeometry(sx,sy,sz),material);m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;parent.add(m);return m}
+function makeTree(x,z){let g=new THREE.Group();let trunk=new THREE.Mesh(new THREE.CylinderGeometry(.18,.24,1.6,7),mat(0x80502d));trunk.position.y=.8;g.add(trunk);let crown=new THREE.Mesh(new THREE.ConeGeometry(1.05,2.6,7),mat(0x167c59));crown.position.y=2.45;crown.castShadow=true;g.add(crown);g.position.set(x,0,z);scene.add(g)}
+function init(){if(started||!window.THREE){if(!window.THREE)status.textContent="3D engine loading…";return}started=true;
+scene=new THREE.Scene();scene.background=new THREE.Color(0x87c9e8);scene.fog=new THREE.Fog(0x87c9e8,22,62);
+camera=new THREE.PerspectiveCamera(58,1,.1,120);renderer=new THREE.WebGLRenderer({antialias:true,alpha:false});renderer.setPixelRatio(Math.min(devicePixelRatio||1,1.7));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.outputColorSpace=THREE.SRGBColorSpace;host.innerHTML="";host.appendChild(renderer.domElement);
+scene.add(new THREE.HemisphereLight(0xdff6ff,0x39714f,2));let sun=new THREE.DirectionalLight(0xfff0c9,2.2);sun.position.set(-12,22,10);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);scene.add(sun);
+let ground=new THREE.Mesh(new THREE.PlaneGeometry(100,100),mat(0x58a65d));ground.rotation.x=-Math.PI/2;ground.receiveShadow=true;scene.add(ground);
+let sand=new THREE.Mesh(new THREE.CylinderGeometry(23,25,.55,64),mat(0xd7bd7a));sand.position.y=-.28;scene.add(sand);
+let water=new THREE.Mesh(new THREE.PlaneGeometry(200,200),mat(0x258db5));water.rotation.x=-Math.PI/2;water.position.y=-.62;scene.add(water);
+for(let i=0;i<38;i++){let a=i*2.399,r=10+(i%7)*1.55,x=Math.cos(a)*r,z=Math.sin(a)*r;if(Math.hypot(x,z)>5.5)makeTree(x,z)}
+// stone path
+for(let i=0;i<9;i++){let p=box(scene,0,.04,7-i*1.8,1.35,.12,1.05,mat(0xb8ad91));p.rotation.y=(i%2)*.12}
+let portal=new THREE.Group();portal.position.set(0,0,-17);scene.add(portal);let stone=mat(0x6c7784),glow=new THREE.MeshStandardMaterial({color:0x45d9ff,emissive:0x1688bb,emissiveIntensity:1.6});
+let left=box(portal,-1.45,1.8,0,.42,3.6,.5,stone),right=box(portal,1.45,1.8,0,.42,3.6,.5,stone),top=box(portal,0,3.55,0,3.3,.45,.55,stone);let ring=new THREE.Mesh(new THREE.TorusGeometry(1.15,.09,10,40),glow);ring.position.set(0,1.85,.05);portal.add(ring);portal.userData.ring=ring;
+player=new THREE.Group();scene.add(player);let body=new THREE.Mesh(new THREE.CapsuleGeometry(.42,.85,4,8),mat(0x2467b2));body.position.y=.9;body.castShadow=true;player.add(body);let head=new THREE.Mesh(new THREE.SphereGeometry(.32,16,12),mat(0xf0c49b));head.position.y=1.68;head.castShadow=true;player.add(head);let hair=new THREE.Mesh(new THREE.SphereGeometry(.33,12,8,0,Math.PI*2,0,Math.PI*.52),mat(0x392b25));hair.position.y=1.82;player.add(hair);let backpack=box(player,0,.95,-.42,.52,.7,.25,mat(0xd18b37));
+player.position.set(0,0,9);
+const positions=[[-7,0,2],[7,0,0],[-8,0,-7],[5,0,-10],[0,0,-14]];
+crystals=positions.map(([x,y,z])=>{let g=new THREE.Group();g.position.set(x,.95,z);let gem=new THREE.Mesh(new THREE.OctahedronGeometry(.55,0),new THREE.MeshStandardMaterial({color:0x55eaff,emissive:0x087cbb,emissiveIntensity:1.4,metalness:.25,roughness:.2}));gem.castShadow=true;g.add(gem);let halo=new THREE.Mesh(new THREE.TorusGeometry(.72,.035,8,28),glow);halo.rotation.x=Math.PI/2;g.add(halo);scene.add(g);return g});
+clock=new THREE.Clock();resize();window.addEventListener("resize",resize);if(anim)cancelAnimationFrame(anim);loop();
+}
+function resize(){if(!renderer)return;let w=Math.max(1,host.clientWidth),h=Math.max(1,host.clientHeight);renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix()}
+function loop(){anim=requestAnimationFrame(loop);if(!renderer)return;let dt=Math.min(clock.getDelta(),.04),speed=5.2,dx=0,dz=0;if(move.left||keys.ArrowLeft||keys.a)dx-=1;if(move.right||keys.ArrowRight||keys.d)dx+=1;if(move.forward||keys.ArrowUp||keys.w)dz-=1;if(move.back||keys.ArrowDown||keys.s)dz+=1;let len=Math.hypot(dx,dz);if(len){dx/=len;dz/=len;player.position.x+=dx*speed*dt;player.position.z+=dz*speed*dt;player.rotation.y=Math.atan2(dx,dz);player.children[0].position.y=.9+Math.sin(performance.now()*.012)*.045}
+player.position.x=THREE.MathUtils.clamp(player.position.x,-20,20);player.position.z=THREE.MathUtils.clamp(player.position.z,-20,19);
+crystals.forEach((g,i)=>{if(!g.visible)return;g.rotation.y+=dt*1.4;g.position.y=.95+Math.sin(performance.now()*.002+i)*.12;if(player.position.distanceTo(g.position)<1.35){g.visible=false;collected++;counter.textContent="💎 "+collected+" / 5";status.textContent=collected===5?"All crystals found! Reach the portal!":"Crystal collected! Keep exploring."}});
+let target=new THREE.Vector3(player.position.x,player.position.y+2.4,player.position.z+7.2);camera.position.lerp(target,.09);camera.lookAt(player.position.x,1.1,player.position.z-1.8);
+portal.userData.ring.material=collected===5?new THREE.MeshStandardMaterial({color:0x79ffb5,emissive:0x18bb65,emissiveIntensity:2}):glow;if(collected===5&&player.position.distanceTo(new THREE.Vector3(0,0,-17))<2.8)status.textContent="✨ Quest complete! You escaped Crystal Island!";
+renderer.render(scene,camera)}
+function reset(){if(!started){init();return}collected=0;counter.textContent="💎 0 / 5";status.textContent="Find the crystals!";player.position.set(0,0,9);crystals.forEach(g=>g.visible=true)}
+window.startCrystalIsland=()=>{if(window.THREE)init();else status.textContent="Loading 3D world…";};
+document.getElementById("adventureReset").onclick=reset;
+document.querySelectorAll("[data-move]").forEach(b=>{let k=b.dataset.move;const on=e=>{e.preventDefault();move[k]=true},off=e=>{e.preventDefault();move[k]=false};b.addEventListener("pointerdown",on);b.addEventListener("pointerup",off);b.addEventListener("pointercancel",off);b.addEventListener("pointerleave",off)});
+window.addEventListener("keydown",e=>{if(!document.getElementById("adventureView").hidden&&["ArrowUp","ArrowDown","ArrowLeft","ArrowRight","w","a","s","d"].includes(e.key)){keys[e.key]=true;e.preventDefault()}});
+window.addEventListener("keyup",e=>{keys[e.key]=false});
+if(window.THREE)init();else{let tries=0,wait=setInterval(()=>{tries++;if(window.THREE){clearInterval(wait);if(!document.getElementById("adventureView").hidden)init()}if(tries>40)clearInterval(wait)},250)}
+})();
 </script></body></html>
