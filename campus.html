@@ -36,7 +36,7 @@ document.getElementById('locate').onclick=()=>{
 document.getElementById('center').onclick=()=>map.setView(CAMPUS,17);
 document.getElementById('directions').onclick=()=>window.open('https://www.google.com/maps/dir/?api=1&destination='+CAMPUS.join(',')+'&travelmode=walking','_blank');
 const amphitheatres=Array.from({length:29},(_,i)=>({name:'Amphi '+(i+1),n:i+1,seen:[5,25,26,27].includes(i+1)}));
-const blocks=['Bloc 02','Bloc 10','Bloc 12','Bloc Hydraulique'];
+const blocks=['Bloc 02','Bloc 03','Bloc 07','Bloc 10','Bloc 12','Bloc Hydraulique'];
 function render(list,root){root.innerHTML='';list.forEach(p=>{const b=document.createElement('button');b.className='place';const left=document.createElement('span');left.textContent=p.name;const small=document.createElement('small');small.textContent=p.seen?'Identifié sur vos captures · GPS à confirmer':'Position à confirmer';left.append(small);const tag=document.createElement('span');tag.className='pill';tag.textContent=p.seen?'Vu':'À placer';b.append(left,tag);b.onclick=()=>{setStatus(p.name+' : le nom est enregistré, mais son point GPS exact reste à confirmer.');};root.append(b)})}
 render(amphitheatres,document.getElementById('amphis'));render(blocks.map(name=>({name,seen:true})),document.getElementById('blocks'));
 document.getElementById('search').addEventListener('input',e=>{const q=e.target.value.trim().toLowerCase();render(amphitheatres.filter(p=>p.name.toLowerCase().includes(q)),document.getElementById('amphis'));render(blocks.filter(p=>p.toLowerCase().includes(q)).map(name=>({name,seen:true})),document.getElementById('blocks'))});
