@@ -3,7 +3,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#101827"><meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="TD TP Planner">
-<link rel="manifest" href="manifest.json"><title>TD / TP Planner</title>
+<link rel="manifest" href="manifest.json"><link rel="icon" type="image/svg+xml" href="icon.svg"><link rel="apple-touch-icon" href="icon.svg"><title>TD / TP Planner</title>
 <style>
 :root{color-scheme:dark;--panel:#152238;--muted:#9aabc2;--blue:#2185d5;--gold:#ffd27a}
 *{box-sizing:border-box}body{margin:0;background:linear-gradient(160deg,#101d31,#080e18);color:#f5f7fb;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding:env(safe-area-inset-top) 14px env(safe-area-inset-bottom)}
@@ -111,16 +111,16 @@ document.addEventListener("keydown",e=>{if(["ArrowLeft","ArrowRight","ArrowUp","
 document.getElementById("leftBtn").onclick=()=>steer("ArrowLeft");document.getElementById("rightBtn").onclick=()=>steer("ArrowRight");document.getElementById("upBtn").onclick=()=>steer("ArrowUp");document.getElementById("downBtn").onclick=()=>steer("ArrowDown");document.getElementById("startGame").onclick=start;document.getElementById("stopGame").onclick=()=>{stop();msg.textContent="Pause · Score : "+score};choose("snake");
 })();
 if("serviceWorker"in navigator)addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));render();setInterval(render,1000);
-</script><script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js"></script>
+</script><script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.159.0/three.min.js"></script>
 <script>
 (()=>{let renderer,scene,camera,player,clock,anim,started=false,crystals=[],collected=0,keys={},move={forward:false,back:false,left:false,right:false},world;
 const host=document.getElementById("adventureCanvas"),status=document.getElementById("adventureStatus"),counter=document.getElementById("questCount");
 function mat(color,roughness=0.85){return new THREE.MeshStandardMaterial({color,roughness})}
 function box(parent,x,y,z,sx,sy,sz,material){let m=new THREE.Mesh(new THREE.BoxGeometry(sx,sy,sz),material);m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;parent.add(m);return m}
 function makeTree(x,z){let g=new THREE.Group();let trunk=new THREE.Mesh(new THREE.CylinderGeometry(.18,.24,1.6,7),mat(0x80502d));trunk.position.y=.8;g.add(trunk);let crown=new THREE.Mesh(new THREE.ConeGeometry(1.05,2.6,7),mat(0x167c59));crown.position.y=2.45;crown.castShadow=true;g.add(crown);g.position.set(x,0,z);scene.add(g)}
-function init(){if(started||!window.THREE){if(!window.THREE)status.textContent="3D engine loading…";return}started=true;
+function init(){if(started||!window.THREE){if(!window.THREE)status.textContent="3D engine loading…";return}if(!window.WebGLRenderingContext){status.textContent="This browser does not support WebGL.";return}started=true;
 scene=new THREE.Scene();scene.background=new THREE.Color(0x87c9e8);scene.fog=new THREE.Fog(0x87c9e8,22,62);
-camera=new THREE.PerspectiveCamera(58,1,.1,120);renderer=new THREE.WebGLRenderer({antialias:true,alpha:false});renderer.setPixelRatio(Math.min(devicePixelRatio||1,1.7));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.outputColorSpace=THREE.SRGBColorSpace;host.innerHTML="";host.appendChild(renderer.domElement);
+camera=new THREE.PerspectiveCamera(58,1,.1,120);try{renderer=new THREE.WebGLRenderer({antialias:true,alpha:false})}catch(err){status.textContent="3D graphics are unavailable. Try Safari or Chrome.";return}renderer.setPixelRatio(Math.min(devicePixelRatio||1,1.7));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.outputColorSpace=THREE.SRGBColorSpace;host.innerHTML="";host.appendChild(renderer.domElement);
 scene.add(new THREE.HemisphereLight(0xdff6ff,0x39714f,2));let sun=new THREE.DirectionalLight(0xfff0c9,2.2);sun.position.set(-12,22,10);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);scene.add(sun);
 let ground=new THREE.Mesh(new THREE.PlaneGeometry(100,100),mat(0x58a65d));ground.rotation.x=-Math.PI/2;ground.receiveShadow=true;scene.add(ground);
 let sand=new THREE.Mesh(new THREE.CylinderGeometry(23,25,.55,64),mat(0xd7bd7a));sand.position.y=-.28;scene.add(sand);
