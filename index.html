@@ -17,17 +17,17 @@ dialog{width:min(94vw,560px);max-height:88vh;overflow:auto;border:1px solid #2a3
 
 
 /* Smooth, lively planner styling */
-body{background:radial-gradient(ellipse at 12% 0%,#17385a 0%,transparent 42%),linear-gradient(160deg,#101d31,#080e18);background-attachment:fixed}
-body:before{content:"";position:fixed;inset:-35% -20%;z-index:-1;pointer-events:none;background:radial-gradient(circle at 70% 30%,#1d75a522,transparent 34%),radial-gradient(circle at 25% 70%,#21b88914,transparent 30%);animation:none}
-button,.day,.timer,.mode,.lesson{transition:transform .22s ease,box-shadow .22s ease,background .22s ease,border-color .22s ease,filter .22s ease}
-button{cursor:pointer;box-shadow:0 4px 12px #0002}button:active{transform:scale(.96);filter:brightness(1.18)}button:focus-visible{outline:2px solid #70d7ff;outline-offset:3px}
+body{background:linear-gradient(160deg,#101d31,#080e18)}
+body:before{content:none}
+button,.day,.timer,.mode,.lesson{transition:none!important}
+button{cursor:pointer;box-shadow:0 4px 12px #0002}button:active{transform:none;filter:none}button:focus-visible{outline:2px solid #70d7ff;outline-offset:3px}
 .timer{position:relative;overflow:hidden;box-shadow:0 12px 30px #0003,0 0 24px #2185d522;animation:none}
 .timer:after{content:"";position:absolute;width:170px;height:170px;right:-48px;top:-82px;border:1px solid #ffffff20;border-radius:50%;box-shadow:0 0 0 18px #ffffff09,0 0 0 38px #ffffff06;pointer-events:none}
 #countdown{text-shadow:0 0 22px #b9efff55;letter-spacing:.02em}
 .mode{border:1px solid #ffffff0c;box-shadow:0 7px 20px #0002;animation:none}
-.day{box-shadow:0 7px 18px #0002;animation:none}.day:hover{transform:translateY(-2px);box-shadow:0 12px 24px #0004}
+.day{box-shadow:0 7px 18px #0002;animation:none}.day:hover{transform:none;box-shadow:0 7px 18px #0002}
 .day.today{box-shadow:0 0 0 1px #2185d555,0 9px 24px #2185d522}.lesson{box-shadow:inset 0 1px #ffffff08}.lesson.next{animation:none}
-header h1{letter-spacing:-.035em}.gear{transition:transform .35s ease}.gear:active{transform:rotate(45deg) scale(.95)}.note{opacity:.82}
+header h1{letter-spacing:-.035em}.gear{transition:transform .35s ease}.gear:active{transform:none}.note{opacity:.82}
 
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 </style></head><body><main>
