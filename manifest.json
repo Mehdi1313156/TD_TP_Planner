@@ -1,0 +1,9 @@
+{
+  "name": "TD TP Planner - Groupe 3",
+  "short_name": "TD TP",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#0b1220",
+  "theme_color": "#101827",
+  "icons": []
+}
