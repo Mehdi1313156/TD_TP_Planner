@@ -18,19 +18,17 @@ dialog{width:min(94vw,560px);max-height:88vh;overflow:auto;border:1px solid #2a3
 
 /* Smooth, lively planner styling */
 body{background:radial-gradient(ellipse at 12% 0%,#17385a 0%,transparent 42%),linear-gradient(160deg,#101d31,#080e18);background-attachment:fixed}
-body:before{content:"";position:fixed;inset:-35% -20%;z-index:-1;pointer-events:none;background:radial-gradient(circle at 70% 30%,#1d75a522,transparent 34%),radial-gradient(circle at 25% 70%,#21b88914,transparent 30%);animation:ambientDrift 18s ease-in-out infinite alternate}
+body:before{content:"";position:fixed;inset:-35% -20%;z-index:-1;pointer-events:none;background:radial-gradient(circle at 70% 30%,#1d75a522,transparent 34%),radial-gradient(circle at 25% 70%,#21b88914,transparent 30%);animation:none}
 button,.day,.timer,.mode,.lesson{transition:transform .22s ease,box-shadow .22s ease,background .22s ease,border-color .22s ease,filter .22s ease}
 button{cursor:pointer;box-shadow:0 4px 12px #0002}button:active{transform:scale(.96);filter:brightness(1.18)}button:focus-visible{outline:2px solid #70d7ff;outline-offset:3px}
-.timer{position:relative;overflow:hidden;box-shadow:0 12px 30px #0003,0 0 24px #2185d522;animation:riseIn .55s both}
+.timer{position:relative;overflow:hidden;box-shadow:0 12px 30px #0003,0 0 24px #2185d522;animation:none}
 .timer:after{content:"";position:absolute;width:170px;height:170px;right:-48px;top:-82px;border:1px solid #ffffff20;border-radius:50%;box-shadow:0 0 0 18px #ffffff09,0 0 0 38px #ffffff06;pointer-events:none}
 #countdown{text-shadow:0 0 22px #b9efff55;letter-spacing:.02em}
-.mode{border:1px solid #ffffff0c;box-shadow:0 7px 20px #0002;animation:riseIn .6s .08s both}
-.day{box-shadow:0 7px 18px #0002;animation:riseIn .5s both;animation-delay:calc(var(--i,0)*55ms)}.day:hover{transform:translateY(-2px);box-shadow:0 12px 24px #0004}
-.day.today{box-shadow:0 0 0 1px #2185d555,0 9px 24px #2185d522}.lesson{box-shadow:inset 0 1px #ffffff08}.lesson.next{animation:nextPulse 2.8s ease-in-out infinite}
+.mode{border:1px solid #ffffff0c;box-shadow:0 7px 20px #0002;animation:none}
+.day{box-shadow:0 7px 18px #0002;animation:none}.day:hover{transform:translateY(-2px);box-shadow:0 12px 24px #0004}
+.day.today{box-shadow:0 0 0 1px #2185d555,0 9px 24px #2185d522}.lesson{box-shadow:inset 0 1px #ffffff08}.lesson.next{animation:none}
 header h1{letter-spacing:-.035em}.gear{transition:transform .35s ease}.gear:active{transform:rotate(45deg) scale(.95)}.note{opacity:.82}
-@keyframes riseIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-@keyframes nextPulse{0%,100%{box-shadow:0 0 0 #65e6a300}50%{box-shadow:0 0 18px #65e6a322}}
-@keyframes ambientDrift{from{transform:translate3d(-1%,0,0) scale(1)}to{transform:translate3d(1%,2%,0) scale(1.06)}}
+
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 </style></head><body><main>
 <header><div><h1>TD / TP Planner</h1><div class="sub">Groupe 3 · L3 Électromécanique</div></div><div style="display:flex;gap:7px;align-items:center"><a href="campus.html" style="display:inline-block;text-decoration:none;background:#176b83;color:white;padding:10px 12px;border-radius:12px;font-size:12px;font-weight:750">🗺️ Carte</a><button class="gear" id="settingsBtn">⚙️</button></div></header>
@@ -67,6 +65,7 @@ document.getElementById("settingsBtn").onclick=openSettings;document.getElementB
 document.getElementById("save").onclick=()=>{state.tpMode=document.getElementById("tpMode").value;state.anchor=document.getElementById("anchor").value||"2026-11-08";document.querySelectorAll("#editors [data-k]").forEach(el=>{state.days[+el.dataset.di].items[+el.dataset.ii][el.dataset.k]=el.value.trim()});save();document.getElementById("settings").close();render()};
 document.getElementById("reset").onclick=()=>{if(confirm("Réinitialiser le planning ?")){state={days:clone(defaults),tpMode:"auto",anchor:"2026-11-08"};save();openSettings();render()}};
 
-function updateCountdown(){const now=new Date(),next=nextClass();if(next){document.getElementById("timerLabel").textContent=next.start<=now?"COURS EN COURS":"PROCHAIN COURS";document.getElementById("nextName").textContent=next.item.name;document.getElementById("nextMeta").textContent=next.day.day+" · "+next.item.time+" · "+next.item.type+" · "+next.item.room;const sec=Math.max(0,Math.floor((next.start-now)/1000));document.getElementById("countdown").textContent=next.start<=now?"EN COURS":String(Math.floor(sec/3600)).padStart(2,"0")+":"+String(Math.floor(sec%3600/60)).padStart(2,"0")+":"+String(sec%60).padStart(2,"0")}else{document.getElementById("timerLabel").textContent="PROCHAIN COURS";document.getElementById("nextName").textContent="Aucun cours programmé";document.getElementById("countdown").textContent="—";document.getElementById("nextMeta").textContent=""}}
+function setTextIfChanged(id,value){const el=document.getElementById(id);if(el.textContent!==value)el.textContent=value}
+function updateCountdown(){const now=new Date(),next=nextClass();if(next){setTextIfChanged("timerLabel",next.start<=now?"COURS EN COURS":"PROCHAIN COURS");setTextIfChanged("nextName",next.item.name);setTextIfChanged("nextMeta",next.day.day+" · "+next.item.time+" · "+next.item.type+" · "+next.item.room);const sec=Math.max(0,Math.floor((next.start-now)/1000));setTextIfChanged("countdown",next.start<=now?"EN COURS":String(Math.floor(sec/3600)).padStart(2,"0")+":"+String(Math.floor(sec%3600/60)).padStart(2,"0")+":"+String(sec%60).padStart(2,"0"))}else{setTextIfChanged("timerLabel","PROCHAIN COURS");setTextIfChanged("nextName","Aucun cours programmé");setTextIfChanged("countdown","—");setTextIfChanged("nextMeta","")}}
 if("serviceWorker"in navigator)addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));render();updateCountdown();setInterval(updateCountdown,1000);
 </script></body></html>
