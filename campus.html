@@ -15,7 +15,7 @@
 </section>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-const CAMPUS=[36.75217,5.03768]; // repère approximatif du campus, pas une entrée ni un amphi
+const CAMPUS=[36.75217,5.03768]; // repère général approximatif du campus
 const map=L.map('map',{zoomControl:true}).setView(CAMPUS,17);
 L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,attribution:'Tiles © Esri — Sources: Esri, Maxar, Earthstar Geographics'}).addTo(map);
 const campusPin=L.marker(CAMPUS).addTo(map).bindPopup('<b>Université de Béjaïa</b><br>Repère général du campus');
@@ -30,14 +30,14 @@ document.getElementById('locate').onclick=()=>{
   if(userMarker)map.removeLayer(userMarker);if(userCircle)map.removeLayer(userCircle);
   userMarker=L.circleMarker(userPosition,{radius:9,color:'#fff',weight:3,fillColor:'#1685ff',fillOpacity:1}).addTo(map).bindPopup('Vous êtes ici');
   userCircle=L.circle(userPosition,{radius:accuracy,color:'#1685ff',weight:1,fillOpacity:.08}).addTo(map);
-  map.setView(userPosition,18);setStatus('Position trouvée · précision estimée ±'+Math.round(accuracy)+' m. La précision peut être réduite à l’intérieur des bâtiments.');
+  map.setView(userPosition,18);render(blocks,document.getElementById('blocks'));setStatus('Position trouvée · précision estimée ±'+Math.round(accuracy)+' m. Distance Bloc 02 : '+distanceMeters(userPosition,[36.7513767,5.0340047])+' m à vol d’oiseau. La précision peut être réduite à l’intérieur des bâtiments.');
  },err=>setStatus(err.code===1?'Autorisation refusée : activez la localisation pour ce site dans les réglages de l’iPhone.':'Position indisponible. Vérifiez le GPS et réessayez.'),{enableHighAccuracy:true,timeout:15000,maximumAge:5000});
 };
 document.getElementById('center').onclick=()=>map.setView(CAMPUS,17);
 document.getElementById('directions').onclick=()=>window.open('https://www.google.com/maps/dir/?api=1&destination='+CAMPUS.join(',')+'&travelmode=walking','_blank');
 const amphitheatres=Array.from({length:29},(_,i)=>({name:'Amphi '+(i+1),n:i+1,seen:[5,25,26,27].includes(i+1)}));
-const blocks=['Bloc 02','Bloc 03','Bloc 07','Bloc 10','Bloc 12','Bloc Hydraulique'];
-function render(list,root){root.innerHTML='';list.forEach(p=>{const b=document.createElement('button');b.className='place';const left=document.createElement('span');left.textContent=p.name;const small=document.createElement('small');small.textContent=p.seen?'Identifié sur vos captures · GPS à confirmer':'Position à confirmer';left.append(small);const tag=document.createElement('span');tag.className='pill';tag.textContent=p.seen?'Vu':'À placer';b.append(left,tag);b.onclick=()=>{setStatus(p.name+' : le nom est enregistré, mais son point GPS exact reste à confirmer.');};root.append(b)})}
-render(amphitheatres,document.getElementById('amphis'));render(blocks.map(name=>({name,seen:true})),document.getElementById('blocks'));
-document.getElementById('search').addEventListener('input',e=>{const q=e.target.value.trim().toLowerCase();render(amphitheatres.filter(p=>p.name.toLowerCase().includes(q)),document.getElementById('amphis'));render(blocks.filter(p=>p.toLowerCase().includes(q)).map(name=>({name,seen:true})),document.getElementById('blocks'))});
+const blocks=[{name:'Bloc 02',coords:[36.7513767,5.0340047]},{name:'Bloc 03'},{name:'Bloc 07'},{name:'Bloc 10'},{name:'Bloc 12'},{name:'Bloc Hydraulique'}];\nconst blockMarkers={};\nblockMarkers['Bloc 02']=L.marker([36.7513767,5.0340047]).addTo(map).bindPopup('<b>Bloc 02</b><br>Coordonnées confirmées par toi');\nfunction distanceMeters(a,b){const R=6371000,rad=x=>x*Math.PI/180,dLat=rad(b[0]-a[0]),dLon=rad(b[1]-a[1]),x=Math.sin(dLat/2)**2+Math.cos(rad(a[0]))*Math.cos(rad(b[0]))*Math.sin(dLon/2)**2;return Math.round(2*R*Math.asin(Math.sqrt(x)));}
+function render(list,root){root.innerHTML='';list.forEach(p=>{const b=document.createElement('button');b.className='place';const left=document.createElement('span');left.textContent=p.name;const small=document.createElement('small');small.textContent=p.coords?'Coordonnées confirmées':(p.seen?'Identifié sur vos captures · GPS à confirmer':'Position à confirmer');left.append(small);const tag=document.createElement('span');tag.className='pill';tag.textContent=p.coords?(userPosition?distanceMeters(userPosition,p.coords)+' m':'GPS OK'):(p.seen?'Vu':'À placer');b.append(left,tag);b.onclick=()=>{if(p.coords){map.setView(p.coords,19);blockMarkers[p.name].openPopup();setStatus(userPosition?'Bloc 02 · '+distanceMeters(userPosition,p.coords)+' m à vol d’oiseau.':'Bloc 02 sélectionné · active Ma position pour calculer la distance.');}else setStatus(p.name+' : son point GPS exact reste à confirmer.');};root.append(b)})}
+render(amphitheatres,document.getElementById('amphis'));render(blocks,document.getElementById('blocks'));
+document.getElementById('search').addEventListener('input',e=>{const q=e.target.value.trim().toLowerCase();render(amphitheatres.filter(p=>p.name.toLowerCase().includes(q)),document.getElementById('amphis'));render(blocks.filter(p=>p.name.toLowerCase().includes(q)),document.getElementById('blocks'))});
 </script></body></html>
