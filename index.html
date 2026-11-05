@@ -14,11 +14,33 @@ button,select,input{font:inherit}button{border:0;border-radius:12px;padding:11px
 .days{display:grid;gap:10px}.day{background:var(--panel);border:1px solid #2a3a52;border-radius:15px;padding:11px}.day.today{border:2px solid var(--blue);background:#142d49}.dayhead{font-size:13px;font-weight:850;color:#8ed8ff;margin-bottom:8px;display:flex;justify-content:space-between}.day.today .dayhead{color:white}
 .lesson{padding:10px;border-radius:10px;background:#1c2b40;margin-top:7px;border-left:3px solid #8ed8ff}.lesson.tp{border-left-color:var(--gold)}.lesson.next{background:#14583f;border-left-color:#65e6a3;outline:1px solid #65e6a3}.lesson .top{display:flex;justify-content:space-between;gap:8px;font-size:12px;font-weight:800}.lesson .name{font-size:14px;font-weight:700;margin-top:4px}.lesson .room{font-size:11px;color:var(--muted);margin-top:3px}.empty{font-size:12px;color:var(--muted);padding:4px}
 dialog{width:min(94vw,560px);max-height:88vh;overflow:auto;border:1px solid #2a3a52;border-radius:18px;background:#111d2e;color:white;padding:18px}dialog::backdrop{background:#000a}.field{display:grid;gap:6px;margin:12px 0}label{font-size:12px;color:#c5d1e0}input,select{width:100%;padding:10px;border-radius:9px;border:1px solid #40516a;background:#0c1625;color:white}.editor-day{border-top:1px solid #2a3a52;padding-top:12px;margin-top:12px}.lesson-edit{background:#18283d;padding:10px;border-radius:10px;margin:8px 0}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.primary{background:#176b50}.secondary{background:#293a51}.danger{background:#7c3038}.note{font-size:11px;color:var(--muted);line-height:1.45;margin-top:16px}
+
+.tabs{display:flex;gap:8px;margin:0 0 14px}.tabs .tab{flex:1;background:#1c2b40}.tabs .tab.active{background:#176b50;outline:1px solid #65e6a3}#gamesView h2{margin:12px 0}.game-menu{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.game-choice{flex:1;min-width:90px}.game-panel{background:var(--panel);border:1px solid #2a3a52;border-radius:16px;padding:14px;text-align:center}#gameTitle{font-weight:800;margin-bottom:10px}#gameCanvas{display:block;width:min(100%,320px);height:auto;margin:0 auto;background:#07111f;border:1px solid #40516a;border-radius:10px;touch-action:none}.game-controls{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px auto;max-width:320px}.game-controls button{font-size:20px;padding:12px}
 </style></head><body><main>
 <header><div><h1>TD / TP Planner</h1><div class="sub">Groupe 3 · L3 Électromécanique</div></div><button class="gear" id="settingsBtn">⚙️</button></header>
+<nav class="tabs"><button class="tab active" id="scheduleTab">Emploi du temps</button><button class="tab" id="gamesTab">Mini-jeux 🎮</button></nav>
+<div id="scheduleView">
 <section class="timer"><div class="kicker" id="timerLabel">PROCHAIN COURS</div><div id="nextName">Chargement…</div><div id="countdown">--:--:--</div><div id="nextMeta"></div></section>
 <div class="mode"><div><b id="modeTitle">TP : automatique</b><br><small id="modeDetail">Alternance une semaine sur deux</small></div><button id="modeBtn">Paramètres TP</button></div>
-<section class="days" id="days"></section><p class="note">Le compte à rebours se met à jour chaque seconde lorsque l'application est ouverte. iOS peut suspendre les mises à jour en arrière-plan ou lorsque l'écran est verrouillé.</p></main>
+<section class="days" id="days"></section><p class="note">Le compte à rebours se met à jour chaque seconde lorsque l'application est ouverte. iOS peut suspendre les mises à jour en arrière-plan ou lorsque l'écran est verrouillé.</p></div></main>
+<section id="gamesView" hidden>
+<h2>Mini-jeux 🎮</h2>
+<p class="note">Choisis un jeu, puis utilise les boutons ou les flèches du clavier.</p>
+<div class="game-menu">
+<button class="game-choice" data-game="snake">🐍 Snake</button>
+<button class="game-choice" data-game="breakout">🧱 Casse-briques</button>
+<button class="game-choice" data-game="car">🏎️ Course</button>
+</div>
+<div class="game-panel">
+<div id="gameTitle">Snake</div>
+<canvas id="gameCanvas" width="320" height="400"></canvas>
+<div class="game-controls">
+<button id="leftBtn">◀</button><button id="upBtn">▲</button><button id="downBtn">▼</button><button id="rightBtn">▶</button>
+</div>
+<div class="actions"><button class="primary" id="startGame">Démarrer / Recommencer</button><button class="secondary" id="stopGame">Pause</button></div>
+<div id="gameMessage" class="note">Appuie sur Démarrer pour jouer.</div>
+</div>
+</section>
 <dialog id="settings"><h2>Paramètres du planning</h2>
 <div class="field"><label for="tpMode">Gestion des TP</label><select id="tpMode"><option value="auto">Automatique (alternance)</option><option value="on">Forcer les TP ON</option><option value="off">Forcer les TP OFF</option></select></div>
 <div class="field"><label for="anchor">Semaine de référence (dimanche sans TP)</label><input id="anchor" type="date" value="2026-11-08"></div><div id="editors"></div>
@@ -48,5 +70,37 @@ function openSettings(){document.getElementById("tpMode").value=state.tpMode;doc
 document.getElementById("settingsBtn").onclick=openSettings;document.getElementById("modeBtn").onclick=openSettings;document.getElementById("close").onclick=()=>document.getElementById("settings").close();
 document.getElementById("save").onclick=()=>{state.tpMode=document.getElementById("tpMode").value;state.anchor=document.getElementById("anchor").value||"2026-11-08";document.querySelectorAll("#editors [data-k]").forEach(el=>{state.days[+el.dataset.di].items[+el.dataset.ii][el.dataset.k]=el.value.trim()});save();document.getElementById("settings").close();render()};
 document.getElementById("reset").onclick=()=>{if(confirm("Réinitialiser le planning ?")){state={days:clone(defaults),tpMode:"auto",anchor:"2026-11-08"};save();openSettings();render()}};
+
+document.getElementById("scheduleTab").onclick=()=>{document.getElementById("scheduleView").hidden=false;document.getElementById("gamesView").hidden=true;document.getElementById("scheduleTab").classList.add("active");document.getElementById("gamesTab").classList.remove("active")};
+document.getElementById("gamesTab").onclick=()=>{document.getElementById("scheduleView").hidden=true;document.getElementById("gamesView").hidden=false;document.getElementById("gamesTab").classList.add("active");document.getElementById("scheduleTab").classList.remove("active")};
+(()=>{
+const canvas=document.getElementById("gameCanvas"),ctx=canvas.getContext("2d"),msg=document.getElementById("gameMessage");
+let game="snake",timer=null,running=false,snake=[],dir={x:1,y:0},food={},bricks=[],ball={},paddle=140,carX=145,obstacles=[],score=0,tick=0;
+const titles={snake:"🐍 Snake",breakout:"🧱 Casse-briques",car:"🏎️ Course"};
+function choose(g){game=g;document.getElementById("gameTitle").textContent=titles[g];stop();draw();msg.textContent="Appuie sur Démarrer pour jouer."}
+document.querySelectorAll(".game-choice").forEach(b=>b.onclick=()=>choose(b.dataset.game));
+function stop(){if(timer)clearInterval(timer);timer=null;running=false}
+function start(){stop();running=true;score=0;tick=0;
+if(game==="snake"){snake=[{x:8,y:10},{x:7,y:10},{x:6,y:10}];dir={x:1,y:0};food={x:14,y:8};}
+if(game==="breakout"){ball={x:160,y:300,dx:3,dy:-3};paddle=130;bricks=[];for(let y=0;y<4;y++)for(let x=0;x<7;x++)bricks.push({x:12+x*43,y:35+y*22,on:true});}
+if(game==="car"){carX=145;obstacles=[];}
+msg.textContent="Score : 0";timer=setInterval(step,game==="snake"?125:25)}
+function end(t){stop();msg.textContent=t+" · Score : "+score}
+function draw(){ctx.clearRect(0,0,320,400);ctx.fillStyle="#07111f";ctx.fillRect(0,0,320,400);
+if(game==="snake"){ctx.fillStyle="#65e6a3";snake.forEach(p=>ctx.fillRect(p.x*20+1,p.y*20+1,18,18));ctx.fillStyle="#ff7272";ctx.fillRect(food.x*20+2,food.y*20+2,16,16)}
+if(game==="breakout"){bricks.forEach(b=>{if(b.on){ctx.fillStyle="#69b9ff";ctx.fillRect(b.x,b.y,38,14)}});ctx.fillStyle="#65e6a3";ctx.fillRect(paddle,370,65,10);ctx.beginPath();ctx.arc(ball.x,ball.y,7,0,Math.PI*2);ctx.fillStyle="#ffd27a";ctx.fill()}
+if(game==="car"){ctx.strokeStyle="#53647b";ctx.setLineDash([18,14]);ctx.beginPath();ctx.moveTo(160,0);ctx.lineTo(160,400);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle="#2185d5";ctx.fillRect(carX,335,30,48);ctx.fillStyle="#ff7272";obstacles.forEach(o=>ctx.fillRect(o.x,o.y,30,45))}
+ctx.fillStyle="white";ctx.font="14px sans-serif";ctx.fillText("Score: "+score,10,20)}
+function step(){tick++;
+if(game==="snake"){let h={x:snake[0].x+dir.x,y:snake[0].y+dir.y};if(h.x<0||h.x>=16||h.y<0||h.y>=20||snake.some(p=>p.x===h.x&&p.y===h.y)){end("Perdu");return}snake.unshift(h);if(h.x===food.x&&h.y===food.y){score+=10;food={x:Math.floor(Math.random()*16),y:Math.floor(Math.random()*20)}}else snake.pop()}
+if(game==="breakout"){ball.x+=ball.dx;ball.y+=ball.dy;if(ball.x<7||ball.x>313)ball.dx*=-1;if(ball.y<7)ball.dy*=-1;if(ball.y>360&&ball.y<385&&ball.x>paddle&&ball.x<paddle+65)ball.dy=-Math.abs(ball.dy);for(let b of bricks)if(b.on&&ball.x>b.x&&ball.x<b.x+38&&ball.y>b.y&&ball.y<b.y+14){b.on=false;ball.dy*=-1;score+=5;break}if(ball.y>405){end("Partie terminée");return}if(bricks.every(b=>!b.on)){end("Bravo !");return}}
+if(game==="car"){if(tick%35===0)obstacles.push({x:[45,145,245][Math.floor(Math.random()*3)],y:-45});obstacles.forEach(o=>o.y+=4);obstacles=obstacles.filter(o=>o.y<410);if(obstacles.some(o=>o.x<carX+30&&o.x+30>carX&&o.y<383&&o.y+45>335)){end("Collision !");return}if(tick%35===0)score+=1}
+msg.textContent="Score : "+score;draw()}
+function steer(k){if(game==="snake"){const d={ArrowLeft:{x:-1,y:0},ArrowRight:{x:1,y:0},ArrowUp:{x:0,y:-1},ArrowDown:{x:0,y:1}}[k];if(d&&!(d.x===-dir.x&&d.y===-dir.y))dir=d}
+if(game==="breakout"){if(k==="ArrowLeft")paddle=Math.max(0,paddle-22);if(k==="ArrowRight")paddle=Math.min(255,paddle+22)}
+if(game==="car"){if(k==="ArrowLeft")carX=Math.max(10,carX-25);if(k==="ArrowRight")carX=Math.min(280,carX+25)}draw()}
+document.addEventListener("keydown",e=>{if(["ArrowLeft","ArrowRight","ArrowUp","ArrowDown"].includes(e.key)&&!document.getElementById("gamesView").hidden){e.preventDefault();steer(e.key)}});
+document.getElementById("leftBtn").onclick=()=>steer("ArrowLeft");document.getElementById("rightBtn").onclick=()=>steer("ArrowRight");document.getElementById("upBtn").onclick=()=>steer("ArrowUp");document.getElementById("downBtn").onclick=()=>steer("ArrowDown");document.getElementById("startGame").onclick=start;document.getElementById("stopGame").onclick=()=>{stop();msg.textContent="Pause · Score : "+score};choose("snake");
+})();
 if("serviceWorker"in navigator)addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));render();setInterval(render,1000);
 </script></body></html>
