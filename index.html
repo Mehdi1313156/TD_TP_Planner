@@ -33,7 +33,7 @@ header h1{letter-spacing:-.035em}.gear{transition:transform .35s ease}.gear:acti
 @keyframes ambientDrift{from{transform:translate3d(-1%,0,0) scale(1)}to{transform:translate3d(1%,2%,0) scale(1.06)}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 </style></head><body><main>
-<header><div><h1>TD / TP Planner</h1><div class="sub">Groupe 3 · L3 Électromécanique</div></div><button class="gear" id="settingsBtn">⚙️</button></header>
+<header><div><h1>TD / TP Planner</h1><div class="sub">Groupe 3 · L3 Électromécanique</div></div><div style="display:flex;gap:7px;align-items:center"><a href="campus.html" style="display:inline-block;text-decoration:none;background:#176b83;color:white;padding:10px 12px;border-radius:12px;font-size:12px;font-weight:750">🗺️ Carte</a><button class="gear" id="settingsBtn">⚙️</button></div></header>
 <div id="scheduleView"><section class="timer"><div class="kicker" id="timerLabel">PROCHAIN COURS</div><div id="nextName">Chargement…</div><div id="countdown">--:--:--</div><div id="nextMeta"></div></section>
 <div class="mode"><div><b id="modeTitle">TP : automatique</b><br><small id="modeDetail">Alternance une semaine sur deux</small></div><button id="modeBtn">Paramètres TP</button></div>
 <section class="days" id="days"></section><p class="note">Le compte à rebours se met à jour chaque seconde lorsque l'application est ouverte. iOS peut suspendre les mises à jour en arrière-plan ou lorsque l'écran est verrouillé.</p></div></main>
